@@ -15,6 +15,44 @@ npm start        # serve the export on :3000
 
 Deploy `out/` anywhere that serves static files.
 
+## Deploying
+
+`.github/workflows/deploy.yml` publishes to **GitHub Pages** on every push to
+`main`. There is no server: the workflow runs the static export and hands `out/`
+to Pages. `.github/workflows/ci.yml` runs the same install → typecheck → build
+on pull requests, so nothing reaches `main` that cannot be published.
+
+Live at **https://nihadmammadli.github.io/kera/**.
+
+### The base path, which is the only tricky part
+
+A project repo is served from `/<repo>/`, not from the domain root, so every
+absolute asset URL needs that prefix or it 404s. `next/link`, `next/image` and
+`app/icon.svg` are handled by `basePath` in `next.config.mjs`; a raw `<img src>`
+and everything in `metadata` are not, so they go through `asset()` in
+[lib/paths.ts](lib/paths.ts).
+
+The workflow gets the value from `actions/configure-pages` and passes it in as
+`NEXT_PUBLIC_BASE_PATH`, so **nothing needs editing when the domain changes** —
+add a custom domain in the repo's Pages settings and the next build emits
+root-relative URLs on its own. A build step greps the emitted HTML and fails the
+deploy if the prefix did not land, because a wrong base path produces a page
+that loads and then shows no images at all.
+
+Locally both values are unset, which is correct for `npm run dev`. To see what
+Pages will actually serve:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/kera npm run build
+npx serve out          # then open http://localhost:3000/kera/
+```
+
+### Other hosts
+
+Vercel and Netlify serve from a domain root, so leave both variables unset and
+they will build this repo as-is (`npm run build`, publish `out/`). Only the
+sub-path case needs `NEXT_PUBLIC_BASE_PATH`.
+
 ## Editing content
 
 **Everything a person needs to change lives in `content/site.ts`.** Nothing else

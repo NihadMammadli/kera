@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Marcellus, Alegreya_Sans, Noto_Serif_Georgian } from 'next/font/google';
 import { site } from '@/content/site';
+import { asset, SITE_URL } from '@/lib/paths';
 import './globals.css';
 
 const display = Marcellus({
@@ -27,7 +28,7 @@ const description =
   'KERA is a Georgian restaurant being built on Rue Saint-Quentin in Brussels, opening autumn 2026. Kera is the Georgian word for hearth — the fire a house is built around. Follow the build.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kera.brussels'),
+  metadataBase: new URL(SITE_URL),
   title: 'KERA — a Georgian hearth in Brussels | opening autumn 2026',
   description,
   keywords: [
@@ -44,13 +45,13 @@ export const metadata: Metadata = {
     description,
     siteName: 'KERA',
     locale: 'en_GB',
-    images: [{ url: '/img/og.jpg', width: 1200, height: 630, alt: 'KERA — a Georgian hearth in Brussels' }],
+    images: [{ url: asset('/img/og.jpg'), width: 1200, height: 630, alt: 'KERA — a Georgian hearth in Brussels' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'KERA — where fire becomes tradition',
     description,
-    images: ['/img/og.jpg'],
+    images: [asset('/img/og.jpg')],
   },
   alternates: { canonical: '/' },
 };
@@ -67,8 +68,8 @@ const jsonLd = {
   name: 'KERA',
   description,
   servesCuisine: ['Georgian', 'Azerbaijani', 'Caucasian'],
-  url: 'https://kera.brussels',
-  image: 'https://kera.brussels/img/og.jpg',
+  url: SITE_URL,
+  image: `${SITE_URL}${asset('/img/og.jpg')}`,
   address: {
     '@type': 'PostalAddress',
     streetAddress: site.address.street,

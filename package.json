@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "serve out -l 3000"
+    "start": "serve out -l 3000",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -21,5 +22,8 @@
     "playwright": "^1.62.1",
     "typescript": "^5.8.0",
     "serve": "^14.2.4"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }
