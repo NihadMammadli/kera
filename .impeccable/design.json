@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "name": "KERA",
+  "colorMeta": {
+    "plaster": { "displayName": "Fresco plaster", "role": "ground", "note": "The default page ground. Sampled from the build at #101c31 with the fixed mottle over it." },
+    "cinnabar": { "displayName": "Cinnabar", "role": "pigment-field" },
+    "cinnabar-deep": { "displayName": "Cinnabar, shadowed", "role": "pigment-field", "note": "The inscription band's ground. Gilt on it reads 6.6:1." },
+    "ochre": { "displayName": "Ochre", "role": "pigment-ink", "note": "Takes every job gold is forbidden from: section labels, static icons, the plaque rule." },
+    "malachite": { "displayName": "Malachite", "role": "pigment-field", "note": "Field only. Never ink." },
+    "chalk-3": { "displayName": "Chalk, dim", "role": "tertiary-ink", "note": "4.7:1 on plaster — the floor. Do not darken further." },
+    "gilt": { "displayName": "Gold leaf", "role": "gilding", "note": "Rationed by law to what is alight: the primary action, a firing arch, today's build stage, the live element, the inscription band." }
+  },
+  "shadows": {
+    "action": "0 6px 18px -8px rgba(6, 12, 24, 0.72)",
+    "action-hover": "0 12px 26px -10px rgba(6, 12, 24, 0.8)",
+    "type-on-image": "0 0.06em 0.5em rgba(9, 17, 33, 0.6)"
+  },
+  "motion": {
+    "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "gsapEase": "power3.out",
+    "authoredMoment": {
+      "name": "the arch fires",
+      "steps": [
+        "veil clipPath inset(100% 0 0 0) → inset(0), 1.5s",
+        "image scale 1.2 → 1, 1.9s, from t=0",
+        "gilt outline clipPath inset(100% 0 0 0) → inset(0), 1.15s, from t=0.1"
+      ],
+      "trigger": "ScrollTrigger top 82%, once; the hero fires on load at delay 0.15"
+    },
+    "variations": ["marquee band, scroll-velocity modulated", "rooms pinned horizontal scrub", "ladder gilt fill", "split lines yPercent 128 → 0 behind a mask"],
+    "fallback": "The page renders finished in CSS. An inline head script adds `.motion` only under prefers-reduced-motion: no-preference, and removes it after 3000ms if `document.documentElement.dataset.fired` was never set."
+  },
+  "breakpoints": { "pin": "901px", "columns": "900px", "stack": "860px", "narrow": "760px", "hero": "720px", "tight": "640px" },
+  "shapes": {
+    "arch": {
+      "clipPath": "M0,1 L0,0.42 C0,0.17 0.19,0 0.5,0 C0.81,0 1,0.17 1,0.42 L1,1 Z",
+      "units": "objectBoundingBox",
+      "outline": "same path, open at the bottom, stroke 1.25 non-scaling, masked to fade below 30%"
+    },
+    "braid": { "pattern": "46×14 userSpaceOnUse, two mirrored cubic waves crossing at the midline", "role": "carved interlace rule" }
+  },
+  "rules": [
+    "Gold is gilding: the live action, a firing arch, today's stage, the live element, the inscription band. Nothing else.",
+    "Hierarchy from size and pigment, never from font weight — the display face has one weight.",
+    "The page renders finished; only `.motion` un-finishes it.",
+    "Every photograph takes the arch, and every arch fires.",
+    "A fact that is not settled is written as a sentence, never guessed and never left blank.",
+    "No label above a heading."
+  ],
+  "northStar": "The inside of a Georgian mountain church, at the moment a door opens onto the valley."
+}
