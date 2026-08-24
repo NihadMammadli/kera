@@ -1,0 +1,42 @@
+# Pull-request check. Same install, typecheck and build as the deploy job, so
+# nothing reaches main that cannot be published.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - run: npm run typecheck
+
+      - name: Build the static export
+        run: npm run build
+        env:
+          # A project repo deploys under /<repo>; build the PR the same way so
+          # a base-path regression fails here rather than on the live site.
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+
+      - name: Check the export actually produced a page
+        run: test -s out/index.html && test -s out/img/og.jpg

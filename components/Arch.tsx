@@ -4,6 +4,8 @@
  * into the opening. Fired is the CSS default — motion.ts un-fires it first,
  * so no-JS and reduced-motion visitors get the finished wall.
  */
+import { asset } from '@/lib/paths';
+
 type Props = {
   src: string;
   alt: string;
@@ -20,11 +22,11 @@ export function Arch({ src, alt, width, height, className, priority, sizes }: Pr
       <div className="arch__frame">
         <div className="arch__veil" data-arch-veil>
           <picture>
-            <source srcSet={`/img/${src}.webp`} type="image/webp" />
+            <source srcSet={asset(`/img/${src}.webp`)} type="image/webp" />
             <img
               className="arch__img"
               data-arch-img
-              src={`/img/${src}.jpg`}
+              src={asset(`/img/${src}.jpg`)}
               alt={alt}
               width={width}
               height={height}
