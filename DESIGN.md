@@ -101,6 +101,12 @@ typography:
     fontWeight: 500
     lineHeight: 1.6
     letterSpacing: "0.2em"
+  micro-tight:
+    fontFamily: "'Alegreya Sans', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 500
+    lineHeight: 1.5
+    letterSpacing: "0.1em"
   georgian:
     fontFamily: "'Noto Serif Georgian', Marcellus, serif"
     fontSize: "clamp(1.15rem, 2.4vw, 1.7rem)"
@@ -223,9 +229,14 @@ looked at: leads, body, labels, controls.
 **Noto Serif Georgian** carries Mkhedruli. Georgian script never appears without
 a Latin reading beside it.
 
-The ramp: `micro 0.8125` → `body 1.0625` → `step-1` → `lead` → `step-3` →
-`title (max 6rem)` → `wordmark`. Tracking floor `-0.022em` on titles; `+0.2em`
-on micro labels. Body measure 66ch.
+The ramp: `micro 0.8125` → `body-sm 0.98` → `body 1.0625` → `step-1` → `lead` →
+`step-3` → `title (max 6rem)` → `wordmark`. Tracking floor `-0.022em` on titles;
+`+0.2em` on micro labels. Body measure 66ch.
+
+`micro-tight` is the one responsive type variant: below 420px the hero's footer
+labels drop to `0.75rem / 0.1em`, because `0.2em` tracking in a half-width
+column wrapped the address to four lines and every line it took came out of the
+hero arch's height.
 
 Every heading and lead splits into masked lines on scroll (`data-split="lines"`).
 SplitText clips each line to its line box, so `[data-split] > div` carries

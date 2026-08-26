@@ -75,6 +75,20 @@ scroll the gilt outline rises up the jambs and over the crown while the image
 rises into the opening behind it. One motion, six times, varied — not six
 different scroll effects.
 
+## A second trap: the hero arch is sized by one box and placed in another
+
+`.hero__arch` is absolutely positioned inside `.hero__stage`, but was sized in
+viewport units (`60vh` tall, `13vh` off the bottom). On a phone the hero's
+footer stacked into three rows and squeezed the stage to 255px while the arch
+still wanted 352px, so `.hero { overflow: hidden }` cut the crown off — worst on
+a 320×568 screen, which lost 75px of it.
+
+The height is now `min(viewport-derived, space-the-stage-actually-has)` and the
+width follows it through `aspect-ratio`, so a short screen gets a smaller arch
+rather than a squashed or a cropped one. `.impeccable/tools/hero.mjs` measures
+the arch against its stage across eleven viewports; the number to watch is
+`archTop(rel stage)`, which must stay positive.
+
 ## A trap worth remembering
 
 The rooms section pins. Native `scroll-behavior: smooth` therefore has to travel
