@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 const b = await chromium.launch({ channel: 'chrome' });
-for (const w of [1600, 1280, 1100, 1024, 960, 901, 900, 768, 430, 360]) {
+for (const w of [1600, 1280, 1024, 901, 900, 768, 430, 390, 375, 360, 320]) {
   const ctx = await b.newContext({ viewport:{width:w,height:900}, deviceScaleFactor:1 });
   const p = await ctx.newPage();
   await p.goto('http://localhost:4200/', { waitUntil:'networkidle' });
