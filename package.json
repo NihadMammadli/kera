@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/content-check.mjs && next build",
     "start": "serve out -l 3000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "content:check": "node scripts/content-check.mjs",
+    "content:export": "node scripts/content-export.mjs",
+    "content:update": "node scripts/content-import.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -19,9 +22,10 @@
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "exceljs": "^4.4.0",
     "playwright": "^1.62.1",
-    "typescript": "^5.8.0",
-    "serve": "^14.2.4"
+    "serve": "^14.2.4",
+    "typescript": "^5.8.0"
   },
   "engines": {
     "node": ">=20.9"

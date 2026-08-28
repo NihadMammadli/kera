@@ -1,4 +1,4 @@
-import { site } from '@/content/site';
+import { content, t } from '@/content';
 import { Vine } from './Icons';
 
 /**
@@ -7,12 +7,15 @@ import { Vine } from './Icons';
  * something to scroll into; the copy is hidden from screen readers.
  */
 export function Band() {
-  const run = [...site.band, ...site.band];
+  const words = content.words;
+  if (!words.length) return null;
+  const run = [...words, ...words];
+
   return (
-    <div className="band" aria-label="Georgian words this restaurant is built from">
+    <div className="band" aria-label={t('a11y.bandLabel')}>
       <div className="band__track" data-band>
         {run.map((w, i) => (
-          <span className="band__item" key={i} aria-hidden={i >= site.band.length}>
+          <span className="band__item" key={i} aria-hidden={i >= words.length}>
             <span className="band__ka">{w.ka}</span>
             <span className="band__latin">{w.latin}</span>
             <span className="band__gloss">{w.gloss}</span>

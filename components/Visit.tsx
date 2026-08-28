@@ -1,7 +1,8 @@
-import { site } from '@/content/site';
-import { Arch } from './Arch';
+import { content, t, has, picture } from '@/content';
 import { OpeningList } from './OpeningList';
+import { Arch } from './Arch';
 import { Clock, Envelope, Instagram, Phone, Pin } from './Icons';
+import { Em, Lines } from './Rich';
 import { Title } from './Title';
 
 type Fact = {
@@ -12,55 +13,52 @@ type Fact = {
 };
 
 export function Visit() {
-  const v = site.visit;
+  const pic = picture('close');
 
   const facts: Fact[] = [
     {
-      label: 'address',
+      label: t('visit.label.address'),
       icon: Pin,
       value: (
-        <a href={site.address.maps} target="_blank" rel="noreferrer noopener">
-          {site.address.street}
+        <a href={content.mapsUrl} target="_blank" rel="noreferrer noopener">
+          {t('address.street')}
           <br />
-          {site.address.city}, {site.address.country}
+          {t('address.city')}, {t('address.country')}
         </a>
       ),
     },
     {
-      label: 'hours',
+      label: t('visit.label.hours'),
       icon: Clock,
-      value: site.hours
-        ? site.hours.map((h) => (
-            <span key={h.days}>
-              {h.days} · {h.hours}
-              <br />
-            </span>
-          ))
-        : v.pending.hours,
-      pending: !site.hours,
+      value: has('contact.hours') ? <Lines text={t('contact.hours')} /> : t('visit.pending.hours'),
+      pending: !has('contact.hours'),
     },
     {
-      label: 'phone',
+      label: t('visit.label.phone'),
       icon: Phone,
-      value: site.phone ? (
-        <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>
+      value: has('contact.phone') ? (
+        <a href={`tel:${t('contact.phone').replace(/\s/g, '')}`}>{t('contact.phone')}</a>
       ) : (
-        v.pending.phone
+        t('visit.pending.phone')
       ),
-      pending: !site.phone,
+      pending: !has('contact.phone'),
     },
     {
-      label: 'email',
+      label: t('visit.label.email'),
       icon: Envelope,
-      value: site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : v.pending.email,
-      pending: !site.email,
+      value: has('contact.email') ? (
+        <a href={`mailto:${t('contact.email')}`}>{t('contact.email')}</a>
+      ) : (
+        t('visit.pending.email')
+      ),
+      pending: !has('contact.email'),
     },
   ];
 
   return (
     <section className="section visit" id="visit">
       <div className="shell">
-        <Title parts={v.title} className="title visit__title" />
+        <Title text={t('visit.title')} className="title visit__title" />
 
         <div className="visit__grid">
           <div className="facts">
@@ -77,18 +75,13 @@ export function Visit() {
 
           <div className="visit__act">
             <div className="actions" data-reveal>
-              <a
-                className="gilt"
-                href={`https://instagram.com/${site.instagram}`}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
+              <a className="gilt" href={content.instagramUrl} target="_blank" rel="noreferrer noopener">
                 <Instagram />
-                {v.follow}
+                {t('visit.followLabel')}
               </a>
-              <a className="ghost" href={site.address.maps} target="_blank" rel="noreferrer noopener">
+              <a className="ghost" href={content.mapsUrl} target="_blank" rel="noreferrer noopener">
                 <Pin />
-                open in maps
+                {t('visit.mapsLabel')}
               </a>
             </div>
 
@@ -97,20 +90,16 @@ export function Visit() {
         </div>
 
         <div className="visit__close">
-          <div className="visit__closeArch">
-            <Arch
-              src="table"
-              alt="A Georgian table laid at golden hour above a valley, a mountain church on the ridge behind it."
-              width={800}
-              height={900}
-              sizes="(max-width: 860px) 70vw, 26vw"
-            />
-          </div>
+          {pic && (
+            <div className="visit__closeArch">
+              <Arch picture={pic} sizes="(max-width: 860px) 70vw, 26vw" />
+            </div>
+          )}
           <p className="visit__statement" data-split="lines">
-            Welcome home. <em>Welcome to KERA.</em>
+            <Em text={t('visit.statement')} />
           </p>
           <p className="micro" data-reveal>
-            {site.cuisine} · opening {site.opening.value}
+            {t('brand.cuisine')} · {t('hero.openingLabel')} {t('opening.value')}
           </p>
         </div>
       </div>

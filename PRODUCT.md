@@ -80,6 +80,17 @@ invited into the building of the place, not made to wait outside it.
 - Email capture is a stated want; no form backend exists yet, so the markup must
   leave a clean, documented hook rather than a dead form.
 
+## Handoff
+
+The client owns every word. All content lives in `content/site.json`, exchanged
+with them as a generated Excel workbook (`npm run content:export` /
+`content:update`) — no CMS, no admin panel, no service. A validator refuses any
+workbook that would break the page, and the images are placed by the developer
+from file names the client writes in the sheet.
+
+This is the constraint behind "no hardcoded strings": a string a developer has
+to change is a string the restaurant cannot correct on the day it is wrong.
+
 ## Brand Commitments
 
 - Name **KERA**, from the Georgian hearth. The meaning is the story and must be

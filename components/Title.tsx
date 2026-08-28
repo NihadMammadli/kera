@@ -1,11 +1,10 @@
-type Parts = { readonly a: string; readonly em: string; readonly b: string };
+import { Em } from './Rich';
 
-/** Every section heading: plain, emphasised, plain. Split into lines on scroll. */
-export function Title({ parts, className = 'title' }: { parts: Parts; className?: string }) {
+/** Every section heading. *Stars* in the client's text become the gold italic. */
+export function Title({ text, className = 'title' }: { text: string; className?: string }) {
   return (
     <h2 className={className} data-split="lines">
-      {parts.a} <em>{parts.em}</em>
-      {parts.b ? ` ${parts.b}` : ''}
+      <Em text={text} />
     </h2>
   );
 }

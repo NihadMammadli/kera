@@ -97,6 +97,19 @@ getting stuck on the rooms. `Motion.tsx` intercepts every in-page anchor and
 tweens the window over a fixed second instead. Re-enabling native smooth
 scrolling brings the bug straight back.
 
+## The content boundary
+
+Nothing user-visible is written in a component. Every string, every dish, every
+picture's alt text comes from `content/site.json` by way of `t('path')`, and the
+paths are declared once in `content/registry.mjs`, which also generates the
+client's workbook and drives the validator.
+
+Three tiers, and the boundary matters more than the mechanism: the client owns
+content, the developer owns structure, and the visual world in DESIGN.md is
+owned by neither without a design pass. The workbook exposes tier one only —
+typed cells, locked labels, no rich text — so the design cannot be edited by
+someone editing a menu.
+
 ## Unresolved
 
 - Phone, email, hours, the real menu, and the form endpoint — all waiting on the

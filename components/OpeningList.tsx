@@ -1,18 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { site } from '@/content/site';
+import { content, t } from '@/content';
 import { ArrowRight, Check } from './Icons';
+import { WithHandle } from './Rich';
 
 type State = 'idle' | 'sending' | 'done' | 'no-endpoint' | 'error';
 
 export function OpeningList() {
   const [state, setState] = useState<State>('idle');
   const [email, setEmail] = useState('');
+  const endpoint = t('contact.newsletterUrl');
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const endpoint = site.newsletterEndpoint;
 
     /* No list exists yet, so the form says so rather than pretending to work. */
     if (!endpoint) {
@@ -35,11 +36,11 @@ export function OpeningList() {
 
   return (
     <div className="list" data-reveal>
-      <h3 className="list__title">{site.visit.listTitle}</h3>
+      <h3 className="list__title">{t('list.title')}</h3>
 
       <form className="list__form" onSubmit={onSubmit}>
         <label htmlFor="kera-email" className="skip">
-          Your email address
+          {t('list.inputLabel')}
         </label>
         <input
           id="kera-email"
@@ -47,7 +48,7 @@ export function OpeningList() {
           type="email"
           required
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder={t('list.placeholder')}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -55,38 +56,29 @@ export function OpeningList() {
           }}
         />
         <button className="gilt" type="submit" disabled={state === 'sending'}>
-          {state === 'sending' ? 'sending' : 'tell me'}
+          {state === 'sending' ? t('list.buttonBusy') : t('list.button')}
           <ArrowRight />
         </button>
       </form>
 
-      {state === 'idle' && <p className="list__note">{site.visit.listNote}</p>}
+      {state === 'idle' && <p className="list__note">{t('list.note')}</p>}
 
       {state === 'no-endpoint' && (
         <p className="list__note">
-          The list is not switched on yet — we are still building the room, let alone the
-          mailing list. Follow{' '}
-          <a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noreferrer noopener">
-            @{site.instagram}
-          </a>{' '}
-          and you will know the same day we do.
+          <WithHandle text={t('list.replyOff')} />
         </p>
       )}
 
       {state === 'done' && (
         <p className="list__reply">
           <Check />
-          You are on the list. One message, the day we open.
+          {t('list.replyDone')}
         </p>
       )}
 
       {state === 'error' && (
         <p className="list__note">
-          That did not send — the fault is ours, not yours. Try again, or find us at{' '}
-          <a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noreferrer noopener">
-            @{site.instagram}
-          </a>
-          .
+          <WithHandle text={t('list.replyError')} />
         </p>
       )}
     </div>

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Marcellus, Alegreya_Sans, Noto_Serif_Georgian } from 'next/font/google';
-import { site } from '@/content/site';
+import { content, t, picture } from '@/content';
 import { asset, SITE_URL } from '@/lib/paths';
 import './globals.css';
 
@@ -24,34 +24,28 @@ const georgian = Noto_Serif_Georgian({
   variable: '--font-georgian',
 });
 
-const description =
-  'KERA is a Georgian restaurant being built on Rue Saint-Quentin in Brussels, opening autumn 2026. Kera is the Georgian word for hearth — the fire a house is built around. Follow the build.';
+const description = t('seo.description');
+const og = picture('og');
+const ogImage = og ? asset(`/img/${og.file}`) : undefined;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'KERA — a Georgian hearth in Brussels | opening autumn 2026',
+  title: t('seo.title'),
   description,
-  keywords: [
-    'Georgian restaurant Brussels',
-    'KERA Brussels',
-    'khachapuri Brussels',
-    'supra',
-    'Caucasus',
-    'Rue Saint-Quentin',
-  ],
+  keywords: t('seo.keywords').split(',').map((k) => k.trim()).filter(Boolean),
   openGraph: {
     type: 'website',
-    title: 'KERA — where fire becomes tradition',
+    title: `${t('brand.name')} — ${t('brand.tagline')}`,
     description,
-    siteName: 'KERA',
+    siteName: t('brand.name'),
     locale: 'en_GB',
-    images: [{ url: asset('/img/og.jpg'), width: 1200, height: 630, alt: 'KERA — a Georgian hearth in Brussels' }],
+    images: og && ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: og.alt }] : undefined,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'KERA — where fire becomes tradition',
+    title: `${t('brand.name')} — ${t('brand.tagline')}`,
     description,
-    images: [asset('/img/og.jpg')],
+    images: ogImage ? [ogImage] : undefined,
   },
   alternates: { canonical: '/' },
 };
@@ -65,19 +59,19 @@ export const viewport: Viewport = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
-  name: 'KERA',
+  name: t('brand.name'),
   description,
   servesCuisine: ['Georgian', 'Azerbaijani', 'Caucasian'],
   url: SITE_URL,
-  image: `${SITE_URL}${asset('/img/og.jpg')}`,
+  image: ogImage ? `${SITE_URL}${ogImage}` : undefined,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.city,
+    streetAddress: t('address.street'),
+    addressLocality: t('address.city'),
     addressCountry: 'BE',
   },
-  sameAs: [`https://instagram.com/${site.instagram}`],
-  hasMap: site.address.maps,
+  sameAs: [content.instagramUrl],
+  hasMap: content.mapsUrl,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -121,7 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <a className="skip" href="#name">
-          Skip to content
+          {t('a11y.skip')}
         </a>
         {children}
       </body>

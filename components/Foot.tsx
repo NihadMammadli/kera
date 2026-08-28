@@ -1,20 +1,21 @@
-import { site } from '@/content/site';
+import { content, t } from '@/content';
 import { Braid, Instagram } from './Icons';
+import { withHandleText } from './Rich';
 
 export function Foot() {
   return (
     <footer className="foot">
       <div className="shell">
         <div className="foot__top">
-          <p className="foot__mark">KERA</p>
+          <p className="foot__mark">{t('brand.name')}</p>
           <ul className="foot__nav">
-            {site.nav.map((n) => (
+            {content.nav.map((n) => (
               <li key={n.href}>
                 <a href={n.href}>{n.label}</a>
               </li>
             ))}
             <li>
-              <a href="#top">back to the top</a>
+              <a href="#top">{t('footer.backToTop')}</a>
             </li>
           </ul>
         </div>
@@ -23,18 +24,18 @@ export function Foot() {
 
         <div className="foot__base">
           <p style={{ margin: 0 }}>
-            {site.footer.credit} · {site.address.street}, {site.address.city} · opening{' '}
-            {site.opening.value}
+            {t('footer.credit')} · {t('address.street')}, {t('address.city')} ·{' '}
+            {t('hero.openingLabel')} {t('opening.value')}
           </p>
           <div className="foot__social">
             <span className="ka" style={{ color: 'var(--chalk-3)' }}>
-              {site.nameGeorgian}
+              {t('brand.nameGeorgian')}
             </span>
             <a
-              href={`https://instagram.com/${site.instagram}`}
+              href={content.instagramUrl}
               target="_blank"
               rel="noreferrer noopener"
-              aria-label={`KERA on Instagram, @${site.instagram}`}
+              aria-label={withHandleText(t('a11y.instagram'))}
             >
               <Instagram />
             </a>
