@@ -55,56 +55,83 @@ sub-path case needs `NEXT_PUBLIC_BASE_PATH`.
 
 ## Editing content
 
-**Everything a person needs to change lives in `content/site.ts`.** Nothing else
-should need touching for a routine update.
+**Every word on this site lives in `content/site.json`, and nobody is expected
+to edit that by hand.** The client works in a spreadsheet; you run one command.
 
-### The four pending facts
-
-`phone`, `email`, `hours` and `newsletterEndpoint` are `null`. That is
-deliberate, not unfinished: a `null` renders as a written pending line —
-*"There is no phone in an empty room yet."* — instead of a guess or a dead link.
-Fill the value in and the line resolves on its own.
-
-```ts
-phone:  '+32 2 000 00 00',
-email:  'hello@kera.brussels',
-hours:  [{ days: 'tuesday — sunday', hours: '18:00 — 23:00' }],
-
-// switches the opening-list form on; anything that accepts a POST with `email`
-newsletterEndpoint: 'https://formspree.io/f/xxxxxxx',
+```bash
+npm run content:export                       # → kera-content.xlsx, send this
+npm run content:update -- ~/Downloads/kera-content.xlsx   # ← when it comes back
 ```
 
-Until `newsletterEndpoint` is set, the form still submits — it just tells the
-visitor the list is not live and sends them to Instagram. Nothing is broken and
-nothing pretends to work.
+There is no CMS, no admin panel and no service to keep alive. The workbook is
+the interchange format; `content/site.json` is the committed truth, so every
+client revision arrives as a readable git diff.
 
-### Headings
+### The workbook
 
-Section headings are three parts — plain, emphasised, plain — so the italic gold
-word is content, not markup buried in a component:
+Eight sheets, generated from the current site so the client edits over real
+words rather than filling in a blank form:
 
-```ts
-title: { a: 'five rooms,', em: 'none of them', b: 'finished' },
+| Sheet | What it holds |
+|---|---|
+| **Read me first** | The tutorial, written for a restaurant owner |
+| **Text** | Every single string — 81 of them, each with a plain-language note |
+| **Menu** | One row per dish. A new value in `Category` becomes a new tab |
+| **The kitchen** · **Rooms** · **Progress** · **Georgian words** | The repeatable lists |
+| **Images** | The fixed picture slots, by file name |
+
+Labels and notes are locked; only the value cells are editable. Choice columns
+are dropdowns. Row insertion and deletion are allowed on every list sheet, so
+adding a category or a dish needs no explanation beyond "add a row".
+
+### What the client can and cannot break
+
+`content:update` writes nothing until the new content passes `content:check`,
+so a bad workbook leaves the site exactly as it was:
+
+```
+✗ Text › Section: the rooms › Heading — has an odd number of * characters.
+✗ Menu › row 2 — "Dish" is empty, and it cannot be.
+✗ Images › The big photo at the very top — names "my-photo.JPG", but there is
+  no such file in public/img/.
+
+content:update — nothing was changed. Fix the workbook and run it again.
 ```
 
-### The menu is a placeholder
+It checks required fields, dropdown values, unbalanced `*`, broken encoding
+(the Georgian script is the thing most likely to be destroyed by saving from
+the wrong program), missing image files, missing `.webp` siblings, and that
+exactly one Progress row is marked `now`.
 
-`menu.categories` in `content/site.ts` is a **working draft** — invented dishes,
-invented prices — built so the layout could be seen. While `menu.draft` is
-`true` the section prints the disclaimer above the tabs:
+On success it prints what actually moved before you commit:
 
-> *A working draft. These dishes and prices are placeholders while the kitchen
-> writes the real menu — the shape is right, the list is not final.*
+```
+· filled in: Phone number, Opening hours
+· Menu: +3 −1 (29 → 31 rows)
+· Progress: +2 −2 (4 → 4 rows)
+```
 
-Replace `categories` with the real menu and delete `draft` in the same edit.
-Leaving `draft: true` on a real menu hides it behind a false disclaimer;
-deleting `draft` while the placeholders are still there is worse.
+### The conventions the client is taught
 
-### The kitchen list
+- **Empty means pending, not broken.** Clear the phone, email or hours cell and
+  the site writes its own line — *"There is no phone in an empty room yet."*
+  Fill it in and the line resolves itself. Nothing ever renders as a blank gap.
+- **`*stars*` make gold italic.** `five rooms, *none of them* finished`.
+- **Blank line = new paragraph**, `Alt+Enter` = new line inside a cell.
+- **Prices are free text** — `14`, `14,50`, `9 / 42`. The currency symbol is set
+  once on the Text sheet.
+- **`menu.isDraft`** prints the "this is a working draft" note above the tabs.
+  It is the client's switch, not yours.
+- **A room shows its drawing until it is given a photograph.** Fill in the two
+  photo columns on the Rooms sheet and that room — only that room — becomes a
+  picture. The building site converts itself one room at a time.
 
-The six entries under `kitchen` are **standard categories of Georgian cooking,
-not KERA's menu**, and the page says so on the page. Replace them when a real
-menu exists — and change the note above them when you do.
+### Adding a new field
+
+`content/registry.mjs` is the single source of truth. Add an entry there and
+the spreadsheet, the importer and the validator all follow. Then read it in a
+component with `t('your.path')`. **No user-visible string belongs in `.tsx`** —
+if it is not in the registry, the client cannot change it.
 
 ## Images
 

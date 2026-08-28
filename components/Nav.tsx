@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { site } from '@/content/site';
+import { content, t } from '@/content';
 import { Instagram } from './Icons';
 
 export function Nav() {
@@ -18,7 +18,7 @@ export function Nav() {
 
   /* the nav says where you are, which is the whole point of an anchored page */
   useEffect(() => {
-    const targets = site.nav
+    const targets = content.nav
       .map((n) => document.querySelector(n.href))
       .filter((el): el is Element => Boolean(el));
     if (!targets.length) return;
@@ -30,7 +30,7 @@ export function Nav() {
       },
       { rootMargin: '-45% 0px -50% 0px' },
     );
-    targets.forEach((t) => io.observe(t));
+    targets.forEach((target) => io.observe(target));
     return () => io.disconnect();
   }, []);
 
@@ -50,13 +50,13 @@ export function Nav() {
   return (
     <>
       <header className="nav" data-lifted={lifted}>
-        <a className="nav__mark" href="#top" aria-label="KERA, back to top">
-          KERA
+        <a className="nav__mark" href="#top" aria-label={t('a11y.navHome')}>
+          {t('brand.name')}
         </a>
 
-        <nav aria-label="Sections">
+        <nav aria-label={t('a11y.navSections')}>
           <ul className="nav__links">
-            {site.nav.map((item) => (
+            {content.nav.map((item) => (
               <li key={item.href}>
                 <a
                   className="nav__link"
@@ -70,14 +70,9 @@ export function Nav() {
           </ul>
         </nav>
 
-        <a
-          className="gilt"
-          href={`https://instagram.com/${site.instagram}`}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
+        <a className="gilt" href={content.instagramUrl} target="_blank" rel="noreferrer noopener">
           <Instagram />
-          follow the build
+          {t('visit.followLabel')}
         </a>
 
         <button
@@ -85,7 +80,7 @@ export function Nav() {
           type="button"
           aria-expanded={open}
           aria-controls="kera-menu"
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? t('a11y.menuClose') : t('a11y.menuOpen')}
           onClick={() => setOpen((v) => !v)}
         >
           <span />
@@ -95,18 +90,18 @@ export function Nav() {
       </header>
 
       <div className="sheet" id="kera-menu" data-open={open} inert={!open ? true : undefined}>
-        {site.nav.map((item) => (
+        {content.nav.map((item) => (
           <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
             {item.label}
           </a>
         ))}
         <a
-          href={`https://instagram.com/${site.instagram}`}
+          href={content.instagramUrl}
           target="_blank"
           rel="noreferrer noopener"
           onClick={() => setOpen(false)}
         >
-          @{site.instagram}
+          @{content.instagram}
         </a>
       </div>
     </>
