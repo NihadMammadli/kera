@@ -36,8 +36,34 @@ const cellText = (row, i) => {
   return clean(cell.text);
 };
 
+/* Clients send back whatever their software saved. Say so in plain words
+   rather than letting the spreadsheet library throw. */
+const ext = src.slice(src.lastIndexOf('.')).toLowerCase();
+const advice = {
+  '.numbers': 'That is an Apple Numbers file. Open it in Numbers and use File → Export To → Excel.',
+  '.ods': 'That is a LibreOffice file. Open it and use File → Save As → Excel 2007-365 (.xlsx).',
+  '.csv': 'A CSV holds only one sheet, and this workbook has eight. Send the whole .xlsx instead.',
+  '.xls': 'That is the old Excel format. Open it and use File → Save As → Excel Workbook (.xlsx).',
+  '.pdf': 'That is a PDF. The workbook has to come back as the Excel file it was sent as.',
+  '.doc': 'That is a Word file — the content workbook is a spreadsheet, not a document.',
+  '.docx': 'That is a Word file — the content workbook is a spreadsheet, not a document.',
+};
+if (ext !== '.xlsx') {
+  console.error(`content:update — ${src} is not an .xlsx workbook.`);
+  if (advice[ext]) console.error(`  ${advice[ext]}`);
+  else console.error('  Ask for the file to be saved as Excel Workbook (.xlsx).');
+  process.exit(1);
+}
+
 const wb = new ExcelJS.Workbook();
-await wb.xlsx.readFile(src);
+try {
+  await wb.xlsx.readFile(src);
+} catch {
+  console.error(`content:update — ${src} could not be opened as a workbook.`);
+  console.error('  It may be corrupted, or renamed to .xlsx without being converted.');
+  console.error('  Ask for it again, saved from Excel or Google Sheets as Excel Workbook (.xlsx).');
+  process.exit(1);
+}
 
 const need = (name) => {
   const ws = wb.getWorksheet(name);
